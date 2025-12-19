@@ -1,0 +1,34 @@
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.venv
+credentials.json
+client_secret.json
+.env
+.DS_Store
+
+.env.*
+
+# Logs y bases de datos locales (Por seguridad)
+*.log
+*.sql
+*.sqlite3
+metabase.db*
+
+# Carpetas de datos de Docker (Si alguna vez usas volúmenes locales)
+postgres_data/
+metabase_data/
+pgadmin_data/
+
+# Configuraciones de IDE (No le interesan a tu compañero)
+.vscode/
+.idea/
+*.swp
+
+# Archivos de sistema operativo extra
+Thumbs.db
+
+*.pbix
