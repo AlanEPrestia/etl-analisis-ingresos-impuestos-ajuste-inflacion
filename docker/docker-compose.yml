@@ -31,12 +31,6 @@ services:
     volumes:
       - metabase_data:/metabase-data
 
-      ### Alan Prestia
-      ### alaneprestia@gmail.com
-      ### Devlights2025
-      ### Usuario: postgres
-      ### Contraseña: nueva_pass_123
-
 
 volumes:
   postgres_data:
