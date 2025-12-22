@@ -2,12 +2,13 @@
 
 ## 📌 Descripción general
 
-Este proyecto implementa un **pipeline ETL completo** orientado al **análisis económico de los ingresos** de un negocio en el contexto argentino, caracterizado por **procesos inflacionarios sostenidos**.
+Este proyecto implementa un **pipeline ETL completo** orientado al **análisis económico y fiscal de los ingresos** de un negocio en el contexto argentino, caracterizado por **procesos inflacionarios sostenidos**.
 
 El principal objetivo es **analizar los ingresos reales del negocio**, considerando:
 
 * su **evolución a lo largo del tiempo**, ajustada por inflación mediante la **cotización histórica del dólar**
 * la **composición de los ingresos** según medio de pago y condición fiscal
+* la **proporcion de ingresos registrados y no registrados**
 * el **impacto de los componentes impositivos** sobre los montos brutos y netos
 
 De esta forma, el proyecto permite evaluar no solo cuánto se factura, sino **cómo se compone ese ingreso, cómo evoluciona en términos reales y qué proporción se destina al pago de impuestos**.
@@ -22,9 +23,9 @@ Los datos de ventas se recolectaron a lo largo de varios años mediante carga ma
 * Valores nominales no comparables entre años debido a la inflación
 * Montos escritos en texto libre (mezcla de números, monedas y comentarios)
 * Registro de ventas tanto en ARS como en USD
-* Necesidad de distinguir ingresos fiscales y no fiscales
+* Necesidad de distinguir ingresos fiscales y no fiscales, así como su impacto impositivo
 
-Analizar estos datos sin un proceso de limpieza y estandarización conduce a conclusiones distorsionadas.
+Analizar estos datos sin un proceso de limpieza, estandarización y auditoría conduce a conclusiones incompletas o distorsionadas, especialmente en contextos de alta inflación.
 
 ---
 
@@ -69,8 +70,11 @@ PostgreSQL (Docker)
 │   ├── config.py          # Configuración general
 │   └── __init__.py
 │
-├── main.py                # Orquestador del pipeline ETL
-├── docker-compose.yml     # PostgreSQL (Docker)
+│── docker/
+│   └── docker-compose.yml # PostgreSQL (Docker)
+│── reports/
+│   └── 
+├── main.py                # Orquestador del pipeline ETL 
 ├── requirements.txt       # Dependencias del proyecto
 ├── pyproject.toml         # Metadata del proyecto
 ├── README.md
@@ -115,7 +119,7 @@ Este modelo facilita el análisis posterior en herramientas de BI.
 ### 1️⃣ Clonar el repositorio
 
 ```bash
-git clone <url-del-repositorio>
+git clone <https://github.com/AlanEPrestia/etl-analisis-ingresos-impuestos-ajuste-inflacion.git>
 cd proyecto-bootcamp-devlights
 ```
 
@@ -132,22 +136,33 @@ uv pip install -r requirements.txt
 
 ### 3️⃣ Configuración de acceso a Google Sheets
 
-El pipeline consume datos desde Google Sheets mediante la API oficial de Google.
+El pipeline obtiene los datos desde **Google Sheets** mediante la API oficial de Google,
+utilizando un **Service Account**.
 
-Para ejecutar el proyecto en un entorno local es necesario contar con credenciales válidas
-(este repositorio **no incluye credenciales reales**, ya que se utilizan datos de un cliente).
+Para ejecutar el proyecto en un entorno local es obligatorio contar con credenciales válidas.
+Este repositorio **no incluye credenciales reales**, ya que se trabaja con datos de un cliente
+y con información sensible.
 
-De forma general, el proceso consiste en:
+#### Tipo de credenciales requeridas
 
-* Crear un **Service Account** en Google Cloud
-* Generar un archivo de credenciales (`credentials.json`)
-* Definir la ubicación del archivo mediante variables de entorno o configuración local
-* Compartir el Google Sheet con el email del Service Account
+El proyecto espera un archivo de credenciales con las siguientes características:
 
-> ⚠️ Nota: las credenciales no deben versionarse ni subirse al repositorio.
-En un entorno productivo, estas credenciales deberían gestionarse mediante un
-servicio de secretos o variables de entorno seguras.
----
+- **Tipo:** Google Cloud Service Account  
+- **Formato:** JSON  
+- **Permisos mínimos:** acceso de lectura al Google Sheet  
+- **Archivo:** `credentials.json` (no versionado)
+
+El Google Sheet utilizado como fuente de datos debe estar compartido con el email
+asociado al Service Account.
+
+#### Configuración local
+
+La ubicación del archivo de credenciales debe definirse mediante una variable de entorno:
+
+```bash
+GOOGLE_APPLICATION_CREDENTIALS=/ruta/absoluta/credentials.json
+
+
 
 ### 4️⃣ Levantar la infraestructura con Docker
 
@@ -180,6 +195,7 @@ El modelo dimensional permite:
 * Análisis temporal
 * Comparación real de ingresos ajustados por inflación
 * Segmentación por medio de pago
+* Análisis de ingresos registrados vs no registrados
 * Análisis de impuestos, montos netos y rentabilidad
 
 ---
@@ -203,3 +219,36 @@ Data Analyst / Instructor de Programación
 ## ⚠️ Nota
 
 Este proyecto fue desarrollado con fines educativos en el marco de un bootcamp, utilizando **datos reales de un cliente**, tratados con criterios de confidencialidad y anonimización. 
+
+## Contexto del proyecto
+
+Este proyecto fue desarrollado siguiendo **requerimientos formales de un cliente**,
+trabajando con **datos reales de operación**.  
+Por este motivo, el repositorio no incluye información sensible ni credenciales reales,
+y ciertos aspectos del sistema fueron diseñados priorizando confidencialidad,
+trazabilidad y consistencia de los datos.
+
+El objetivo principal del pipeline es **construir una base analítica confiable**
+a partir de fuentes no estructuradas, aplicando criterios de limpieza,
+auditoría y modelado orientado a Business Intelligence.
+
+## Alcance y supuestos actuales
+
+- El pipeline se ejecuta en modo **batch**.
+- La ingesta de datos es **completa** en cada ejecución.
+- No se implementa aún una tabla de auditoría persistente del proceso.
+- Las transformaciones responden a reglas de negocio vigentes al momento
+  del desarrollo del proyecto.
+
+## Próximos pasos (Roadmap)
+
+Como evolución natural del sistema, se consideran los siguientes pasos:
+
+- Implementación de **ingesta incremental** basada en marcas temporales.
+- Incorporación de una **tabla de auditoría** para registrar ejecuciones,
+  volúmenes procesados y eventos relevantes.
+- Optimización del proceso de carga para escenarios de mayor volumen.
+
+
+
+

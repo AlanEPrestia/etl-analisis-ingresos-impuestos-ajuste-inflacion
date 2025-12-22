@@ -27,7 +27,7 @@ def cargar_datos_postgreSQL(df_fact, df_dim_cal, df_dim_medios, df_dim_cot):
     - dim_cotizacion
     """
 
-    print("💾 [LOAD] Conectando a PostgreSQL (Docker) en puerto 5440...")
+    print(" [LOAD] Conectando a PostgreSQL (Docker) en puerto 5440...")
 
     # Cadena de conexión local (Docker)
     cadena_conexion = (
@@ -82,10 +82,10 @@ def cargar_datos_postgreSQL(df_fact, df_dim_cal, df_dim_medios, df_dim_cot):
             dtype={'fecha_id': Date()}
         )
 
-        print("✨ [LOAD] ¡Datos cargados correctamente!")
+        print(" [LOAD] ¡Datos cargados correctamente!")
 
     except Exception as e:
-        print(f"❌ [LOAD] Error al cargar datos: {repr(e)}")
+        print(f" [LOAD] Error al cargar datos: {repr(e)}")
         print("   -> Verificar que Docker esté activo y el puerto expuesto.")
 
 

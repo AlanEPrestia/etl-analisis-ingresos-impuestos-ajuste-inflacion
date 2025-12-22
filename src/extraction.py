@@ -35,7 +35,7 @@ def obtener_dolar_hibrido():
         - cotizacion_blue (float)
     """
 
-    print("💵 [EXTRACT] Consultando Dólar...")
+    print(" [EXTRACT] Consultando Dólar...")
 
     headers = {
         "User-Agent": "Mozilla/5.0",
@@ -85,7 +85,7 @@ def obtener_dolar_hibrido():
             )
 
     except Exception as e:
-        print(f"   ⚠️ Falló historial dólar: {e}")
+        print(f"   Falló historial dólar: {e}")
 
     # --- VALOR ACTUAL ---
     try:
@@ -153,7 +153,7 @@ def obtener_ventas_sheets():
         DataFrame con los datos crudos del Sheet.
     """
 
-    print("🔌 [EXTRACT] Descargando Google Sheets...")
+    print("[EXTRACT] Descargando Google Sheets...")
 
     scope = [
         "https://spreadsheets.google.com/feeds",
@@ -172,5 +172,5 @@ def obtener_ventas_sheets():
         return pd.DataFrame(data)
 
     except Exception as e:
-        print(f"❌ Error Google Sheets: {e}")
+        print(f" Error Google Sheets: {e}")
         return None

@@ -29,13 +29,13 @@ def main():
     df_dolar = obtener_dolar_hibrido()
 
     if df_ventas is None or df_dolar.empty:
-        print("⚠️ No se pudieron obtener los datos. Proceso cancelado.")
+        print(" No se pudieron obtener los datos. Proceso cancelado.")
         return
 
     # =====================================================
     # 2. TRANSFORM
     # =====================================================
-    print("⚙️ [TRANSFORM] Limpieza y modelado de datos")
+    print("  [TRANSFORM] Limpieza y modelado de datos")
 
     # Normalización de nombres de columnas
     df_ventas.columns = df_ventas.columns.str.strip()
@@ -76,13 +76,20 @@ def main():
     # -----------------------------------------------------
     # Deduplicación
     # -----------------------------------------------------
-    cols_control = ["fecha_dt", "Turno", "C", "T", "M", "MP (NEGOCIO)"]
+    cols_control = ["fecha_dt", "Turno", "C", "T", "MP (NEGOCIO)","MP Usuario E","MP Usuario F","MP Usuario A", "M","Revendedores solo números"]
     cols_check = [c for c in cols_control if c in df_ventas.columns]
+
+    rows_before = len(df_ventas)
 
     df_ventas = df_ventas.drop_duplicates(
         subset=cols_check,
         keep="first"
     )
+
+    rows_after = len(df_ventas)
+    rows_removed = rows_before - rows_after
+
+    print(f" DEDUPLICACIÓN: se eliminaron {rows_removed} registros duplicados")
 
     # -----------------------------------------------------
     # Merge con cotización del dólar
@@ -197,7 +204,7 @@ def main():
     )
 
     print("-" * 40)
-    print("🚀 PIPELINE FINALIZADO CORRECTAMENTE")
+    print(" PIPELINE FINALIZADO CORRECTAMENTE")
     print("-" * 40)
 
 
